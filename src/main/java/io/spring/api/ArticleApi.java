@@ -71,6 +71,8 @@ public class ArticleApi {
     private Map<String, Object> articleResponse(ArticleData articleData) {
         return new HashMap<String, Object>() {{
             put("article", articleData);
+
+            
         }};
     }
 }
