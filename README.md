@@ -56,7 +56,7 @@ The entry point address of the backend API is at http://localhost:7070, **not** 
 
 The repository contains a lot of test cases to cover both api test and repository test.
 
-    ./gradlew test
+    mvn package
 
 # Help
 
