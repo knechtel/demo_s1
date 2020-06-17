@@ -2,6 +2,10 @@
 
 
 
+<br>
+<img src='https://1.bp.blogspot.com/-QeeKb7jlLKs/XuljkX5uJmI/AAAAAAAAJDg/ken1tfrpatYcb53xFd-bY_y5tBKPp1rXACLcBGAsYHQ/s1600/example-logo.png'/>
+</br>
+
 > ### Spring boot + MyBatis codebase containing real world examples (CRUD, auth, advanced patterns, etc) that adheres to the [RealWorld](https://github.com/gothinkster/realworld-example-apps) spec and API.
 
 This codebase was created to demonstrate a fully fledged fullstack application built with Spring boot + Mybatis including CRUD operations, authentication, routing, pagination, and more.
