@@ -12,6 +12,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -61,8 +62,8 @@ public class ProfileApi {
     }
 
     private ResponseEntity profileResponse(ProfileData profile) {
-        return ResponseEntity.ok(new HashMap<String, Object>() {{
-            put("profile", profile);
-        }});
+        Map<String,Object> mapProfile =new HashMap<String, Object>();
+        mapProfile.put("profile", profile);
+        return ResponseEntity.ok(mapProfile);
     }
 }

@@ -1,17 +1,15 @@
 package io.spring.application.data;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserData {
-    private String id;
-    private String email;
-    private String username;
-    private String bio;
-    private String image;
+    @Getter @Setter private String id;
+    @Getter @Setter  private String email;
+    @Getter @Setter private String username;
+    @Getter @Setter private String bio;
+    @Getter @Setter private String image;
 }

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping(path = "tags")
@@ -21,8 +22,8 @@ public class TagsApi {
 
     @GetMapping
     public ResponseEntity getTags() {
-        return ResponseEntity.ok(new HashMap<String, Object>() {{
-            put("tags", tagsQueryService.allTags());
-        }});
+        Map<String,Object> mapTags = new HashMap<String,Object>();
+        mapTags.put("tags", tagsQueryService.allTags());
+        return ResponseEntity.ok(mapTags);
     }
 }

@@ -35,8 +35,8 @@ public class ArticleApi {
     public ResponseEntity<?> article(@PathVariable("slug") String slug,
                                      @AuthenticationPrincipal User user) {
         return articleQueryService.findBySlug(slug, user)
-            .map(articleData -> ResponseEntity.ok(articleResponse(articleData)))
-            .orElseThrow(ResourceNotFoundException::new);
+                .map(articleData -> ResponseEntity.ok(articleResponse(articleData)))
+                .orElseThrow(ResourceNotFoundException::new);
     }
 
     @PutMapping
@@ -48,9 +48,9 @@ public class ArticleApi {
                 throw new NoAuthorizationException();
             }
             article.update(
-                updateArticleParam.getTitle(),
-                updateArticleParam.getDescription(),
-                updateArticleParam.getBody());
+                    updateArticleParam.getTitle(),
+                    updateArticleParam.getDescription(),
+                    updateArticleParam.getBody());
             articleRepository.save(article);
             return ResponseEntity.ok(articleResponse(articleQueryService.findBySlug(slug, user).get()));
         }).orElseThrow(ResourceNotFoundException::new);
@@ -69,11 +69,9 @@ public class ArticleApi {
     }
 
     private Map<String, Object> articleResponse(ArticleData articleData) {
-        return new HashMap<String, Object>() {{
-            put("article", articleData);
-
-            
-        }};
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("article", articleData);
+        return map;
     }
 }
 

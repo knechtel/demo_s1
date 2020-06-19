@@ -61,9 +61,9 @@ public class CommentsApi {
                                       @AuthenticationPrincipal User user) {
         Article article = findArticle(slug);
         List<CommentData> comments = commentQueryService.findByArticleId(article.getId(), user);
-        return ResponseEntity.ok(new HashMap<String, Object>() {{
-            put("comments", comments);
-        }});
+        Map<String,Object> mapComments = new HashMap<String, Object>();
+        mapComments.put("comments", comments);
+        return ResponseEntity.ok(mapComments);
     }
 
     @RequestMapping(path = "{id}", method = RequestMethod.DELETE)
@@ -85,9 +85,9 @@ public class CommentsApi {
     }
 
     private Map<String, Object> commentResponse(CommentData commentData) {
-        return new HashMap<String, Object>() {{
-            put("comment", commentData);
-        }};
+        Map<String,Object> mapComment = new HashMap<String, Object>();
+        mapComment.put("comment", commentData);
+        return  mapComment;
     }
 }
 

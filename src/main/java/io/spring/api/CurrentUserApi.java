@@ -38,7 +38,7 @@ public class CurrentUserApi {
                                       @RequestHeader(value = "Authorization") String authorization) {
         UserData userData = userQueryService.findById(currentUser.getId()).get();
         return ResponseEntity.ok(userResponse(
-            new UserWithToken(userData, authorization.split(" ")[1])
+                new UserWithToken(userData, authorization.split(" ")[1])
         ));
     }
 
@@ -53,15 +53,15 @@ public class CurrentUserApi {
         checkUniquenessOfUsernameAndEmail(currentUser, updateUserParam, bindingResult);
 
         currentUser.update(
-            updateUserParam.getEmail(),
-            updateUserParam.getUsername(),
-            updateUserParam.getPassword(),
-            updateUserParam.getBio(),
-            updateUserParam.getImage());
+                updateUserParam.getEmail(),
+                updateUserParam.getUsername(),
+                updateUserParam.getPassword(),
+                updateUserParam.getBio(),
+                updateUserParam.getImage());
         userRepository.save(currentUser);
         UserData userData = userQueryService.findById(currentUser.getId()).get();
         return ResponseEntity.ok(userResponse(
-            new UserWithToken(userData, token.split(" ")[1])
+                new UserWithToken(userData, token.split(" ")[1])
         ));
     }
 
@@ -86,9 +86,9 @@ public class CurrentUserApi {
     }
 
     private Map<String, Object> userResponse(UserWithToken userWithToken) {
-        return new HashMap<String, Object>() {{
-            put("user", userWithToken);
-        }};
+        Map<String, Object> mapUser = new HashMap<String, Object>();
+        mapUser.put("user", userWithToken);
+        return mapUser;
     }
 }
 

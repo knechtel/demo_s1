@@ -1,5 +1,6 @@
 package io.spring.api;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import io.spring.api.exception.InvalidRequestException;
 import io.spring.application.UserQueryService;
@@ -11,6 +12,7 @@ import io.spring.core.user.User;
 import io.spring.core.user.UserRepository;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -94,12 +96,12 @@ public class UsersApi {
     }
 
     private Map<String, Object> userResponse(UserWithToken userWithToken) {
-        return new HashMap<String, Object>() {{
-            put("user", userWithToken);
-        }};
+        Map<String,Object> map = new HashMap<String, Object>();
+        map.put("user", userWithToken);
+        return map;
     }
 }
-
+@Setter
 @Getter
 @JsonRootName("user")
 @NoArgsConstructor
@@ -110,16 +112,19 @@ class LoginParam {
     @NotBlank(message = "can't be empty")
     private String password;
 }
-
+@Setter
 @Getter
 @JsonRootName("user")
 @NoArgsConstructor
 class RegisterParam {
     @NotBlank(message = "can't be empty")
     @Email(message = "should be an email")
+    @JsonProperty("email")
     private String email;
     @NotBlank(message = "can't be empty")
+    @JsonProperty("username")
     private String username;
     @NotBlank(message = "can't be empty")
+    @JsonProperty("password")
     private String password;
 }

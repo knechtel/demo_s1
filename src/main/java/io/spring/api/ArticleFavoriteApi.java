@@ -14,6 +14,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping(path = "articles/{slug}/favorite")
@@ -51,9 +52,9 @@ public class ArticleFavoriteApi {
     }
 
     private ResponseEntity<HashMap<String, Object>> responseArticleData(final ArticleData articleData) {
-        return ResponseEntity.ok(new HashMap<String, Object>() {{
-            put("article", articleData);
-        }});
+        HashMap<String,Object> mapArticleData =new HashMap<String, Object>();
+        mapArticleData.put("article", articleData);
+        return ResponseEntity.ok(mapArticleData);
     }
 
     private Article getArticle(String slug) {

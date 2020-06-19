@@ -1,12 +1,11 @@
 package io.spring.api.security;
 
 import io.spring.core.service.JwtService;
-import io.spring.core.user.UserRepository;;
+import io.spring.core.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -19,7 +18,6 @@ import java.util.Optional;
 
 
 @SuppressWarnings("SpringJavaAutowiringInspection")
-//@Component
 public class JwtTokenFilter extends OncePerRequestFilter {
     @Autowired
     private UserRepository userRepository;
@@ -34,21 +32,21 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         System.out.println("passei aqui !!!");
         System.out.println(request.getHeader(header));
-//        getTokenString(request.getHeader(header)).ifPresent(token -> {
-//            jwtService.getSubFromToken(token).ifPresent(id -> {
-//                if (SecurityContextHolder.getContext().getAuthentication() == null) {
-//                    userRepository.findById(id).ifPresent(user -> {
-//                        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-//                            user,
-//                            null,
-//                            Collections.emptyList()
-//                        );
-//                        authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-//                        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-//                    });
-//                }
-//            });
-//        });
+        getTokenString(request.getHeader(header)).ifPresent(token -> {
+            jwtService.getSubFromToken(token).ifPresent(id -> {
+                if (SecurityContextHolder.getContext().getAuthentication() == null) {
+                    userRepository.findById(id).ifPresent(user -> {
+                        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                            user,
+                            null,
+                            Collections.emptyList()
+                        );
+                        authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                    });
+                }
+            });
+        });
 
         filterChain.doFilter(request, response);
     }

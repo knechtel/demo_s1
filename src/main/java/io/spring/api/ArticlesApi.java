@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping(path = "/articles")
@@ -40,15 +41,15 @@ public class ArticlesApi {
         }
 
         Article article = new Article(
-            newArticleParam.getTitle(),
-            newArticleParam.getDescription(),
-            newArticleParam.getBody(),
-            newArticleParam.getTagList(),
-            user.getId());
+                newArticleParam.getTitle(),
+                newArticleParam.getDescription(),
+                newArticleParam.getBody(),
+                newArticleParam.getTagList(),
+                user.getId());
         articleRepository.save(article);
-        return ResponseEntity.ok(new HashMap<String, Object>() {{
-            put("article", articleQueryService.findById(article.getId(), user).get());
-        }});
+        Map<String, Object> mapArticle = new HashMap<String, Object>();
+        mapArticle.put("article", articleQueryService.findById(article.getId(), user).get());
+        return ResponseEntity.ok(mapArticle);
     }
 
     @GetMapping(path = "feed")
