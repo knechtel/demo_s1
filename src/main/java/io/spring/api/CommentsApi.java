@@ -25,6 +25,7 @@ import javax.validation.constraints.NotBlank;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "/articles/{slug}/comments")
@@ -53,7 +54,8 @@ public class CommentsApi {
         }
         Comment comment = new Comment(newCommentParam.getBody(), user.getId(), article.getId());
         commentRepository.save(comment);
-        return ResponseEntity.status(201).body(commentResponse(commentQueryService.findById(comment.getId(), user).get()));
+        CommentData commentData = commentQueryService.findById(comment.getId(), user).orElse(null);
+        return ResponseEntity.status(201).body(commentResponse(commentData));
     }
 
     @GetMapping

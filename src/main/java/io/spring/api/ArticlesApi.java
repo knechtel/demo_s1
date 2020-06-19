@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 import io.spring.api.exception.InvalidRequestException;
 import io.spring.application.ArticleQueryService;
 import io.spring.application.Page;
+import io.spring.application.data.ArticleData;
 import io.spring.core.article.Article;
 import io.spring.core.article.ArticleRepository;
 import io.spring.core.user.User;
@@ -48,7 +49,8 @@ public class ArticlesApi {
                 user.getId());
         articleRepository.save(article);
         Map<String, Object> mapArticle = new HashMap<String, Object>();
-        mapArticle.put("article", articleQueryService.findById(article.getId(), user).get());
+        ArticleData articleData  =articleQueryService.findById(article.getId(), user).orElse(null);
+        mapArticle.put("article", article);
         return ResponseEntity.ok(mapArticle);
     }
 

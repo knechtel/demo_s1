@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,7 +13,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
+
 public class ErrorResourceSerializer extends JsonSerializer<ErrorResource> {
+    Logger logger = LoggerFactory.getLogger(ErrorResourceSerializer.class);
     @Override
     public void serialize(ErrorResource value, JsonGenerator gen, SerializerProvider serializers) throws IOException, JsonProcessingException {
         Map<String, List<String>> json = new HashMap<>();
@@ -29,7 +34,7 @@ public class ErrorResourceSerializer extends JsonSerializer<ErrorResource> {
                 try {
                     gen.writeString(content);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                   logger.error("context",e);
                 }
             });
             gen.writeEndArray();

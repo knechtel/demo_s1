@@ -36,7 +36,7 @@ public class CurrentUserApi {
     @GetMapping
     public ResponseEntity currentUser(@AuthenticationPrincipal User currentUser,
                                       @RequestHeader(value = "Authorization") String authorization) {
-        UserData userData = userQueryService.findById(currentUser.getId()).get();
+        UserData userData = userQueryService.findById(currentUser.getId()).orElse(null);
         return ResponseEntity.ok(userResponse(
                 new UserWithToken(userData, authorization.split(" ")[1])
         ));
@@ -59,7 +59,7 @@ public class CurrentUserApi {
                 updateUserParam.getBio(),
                 updateUserParam.getImage());
         userRepository.save(currentUser);
-        UserData userData = userQueryService.findById(currentUser.getId()).get();
+        UserData userData = userQueryService.findById(currentUser.getId()).orElse(null);
         return ResponseEntity.ok(userResponse(
                 new UserWithToken(userData, token.split(" ")[1])
         ));

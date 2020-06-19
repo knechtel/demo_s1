@@ -12,7 +12,7 @@ import java.util.TimeZone;
 @MappedTypes(DateTime.class)
 public class DateTimeHandler implements TypeHandler<DateTime> {
 
-    private static final Calendar UTC_CALENDAR = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+    private  final Calendar UTC_CALENDAR = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
 
     @Override
     public void setParameter(PreparedStatement ps, int i, DateTime parameter, JdbcType jdbcType) throws SQLException {

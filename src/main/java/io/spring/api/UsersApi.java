@@ -62,7 +62,7 @@ public class UsersApi {
             "",
             defaultImage);
         userRepository.save(user);
-        UserData userData = userQueryService.findById(user.getId()).get();
+        UserData userData = userQueryService.findById(user.getId()).orElse(null);
         return ResponseEntity.status(201).body(userResponse(new UserWithToken(userData, jwtService.toToken(user))));
     }
 
@@ -87,7 +87,7 @@ public class UsersApi {
     public ResponseEntity userLogin(@Valid @RequestBody LoginParam loginParam, BindingResult bindingResult) {
         Optional<User> optional = userRepository.findByEmail(loginParam.getEmail());
         if (optional.isPresent() && encryptService.check(loginParam.getPassword(), optional.get().getPassword())) {
-            UserData userData = userQueryService.findById(optional.get().getId()).get();
+            UserData userData = userQueryService.findById(optional.get().getId()).orElse(null);
             return ResponseEntity.ok(userResponse(new UserWithToken(userData, jwtService.toToken(optional.get()))));
         } else {
             bindingResult.rejectValue("password", "INVALID", "invalid email or password");
