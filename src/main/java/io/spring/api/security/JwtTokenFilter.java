@@ -30,8 +30,6 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        System.out.println("passei aqui !!!");
-        System.out.println(request.getHeader(header));
         getTokenString(request.getHeader(header)).ifPresent(token -> {
             jwtService.getSubFromToken(token).ifPresent(id -> {
                 if (SecurityContextHolder.getContext().getAuthentication() == null) {
