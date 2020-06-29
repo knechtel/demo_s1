@@ -17,8 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
@@ -28,7 +29,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
+
 
 @RestController
 public class UsersApi {
@@ -51,8 +52,8 @@ public class UsersApi {
         this.jwtService = jwtService;
     }
 
-    @RequestMapping(path = "/users", method = POST)
-    public ResponseEntity createUser(@Valid @RequestBody RegisterParam registerParam, BindingResult bindingResult) {
+    @PostMapping(path = "/users")
+    public ResponseEntity<Object> createUser(@Valid @RequestBody RegisterParam registerParam, BindingResult bindingResult) {
         checkInput(registerParam, bindingResult);
 
         User user = new User(
@@ -83,8 +84,8 @@ public class UsersApi {
         }
     }
 
-    @RequestMapping(path = "/users/login", method = POST)
-    public ResponseEntity userLogin(@Valid @RequestBody LoginParam loginParam, BindingResult bindingResult) {
+    @PostMapping(path = "/users/login")
+    public ResponseEntity<Object> userLogin(@Valid @RequestBody LoginParam loginParam, BindingResult bindingResult) {
         Optional<User> optional = userRepository.findByEmail(loginParam.getEmail());
         if (optional.isPresent() && encryptService.check(loginParam.getPassword(), optional.get().getPassword())) {
             UserData userData = userQueryService.findById(optional.get().getId()).orElse(null);
@@ -96,7 +97,7 @@ public class UsersApi {
     }
 
     private Map<String, Object> userResponse(UserWithToken userWithToken) {
-        Map<String,Object> map = new HashMap<String, Object>();
+        Map<String,Object> map = new HashMap<>();
         map.put("user", userWithToken);
         return map;
     }

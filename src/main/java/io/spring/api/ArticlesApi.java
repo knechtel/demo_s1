@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 import io.spring.api.exception.InvalidRequestException;
 import io.spring.application.ArticleQueryService;
 import io.spring.application.Page;
-import io.spring.application.data.ArticleData;
+import io.spring.application.data.ArticleDataList;
 import io.spring.core.article.Article;
 import io.spring.core.article.ArticleRepository;
 import io.spring.core.user.User;
@@ -34,7 +34,7 @@ public class ArticlesApi {
     }
 
     @PostMapping
-    public ResponseEntity createArticle(@Valid @RequestBody NewArticleParam newArticleParam,
+    public ResponseEntity<Map<String, Object>> createArticle(@Valid @RequestBody NewArticleParam newArticleParam,
                                         BindingResult bindingResult,
                                         @AuthenticationPrincipal User user) {
         if (bindingResult.hasErrors()) {
@@ -48,21 +48,20 @@ public class ArticlesApi {
                 newArticleParam.getTagList(),
                 user.getId());
         articleRepository.save(article);
-        Map<String, Object> mapArticle = new HashMap<String, Object>();
-        ArticleData articleData  =articleQueryService.findById(article.getId(), user).orElse(null);
-        mapArticle.put("article", article);
+        Map<String, Object> mapArticle = new HashMap<>();
+        mapArticle.put("article", articleQueryService.findById(article.getId(), user).orElse(null));
         return ResponseEntity.ok(mapArticle);
     }
 
     @GetMapping(path = "feed")
-    public ResponseEntity getFeed(@RequestParam(value = "offset", defaultValue = "0") int offset,
-                                  @RequestParam(value = "limit", defaultValue = "20") int limit,
-                                  @AuthenticationPrincipal User user) {
+    public ResponseEntity<ArticleDataList> getFeed(@RequestParam(value = "offset", defaultValue = "0") int offset,
+                                                   @RequestParam(value = "limit", defaultValue = "20") int limit,
+                                                   @AuthenticationPrincipal User user) {
         return ResponseEntity.ok(articleQueryService.findUserFeed(user, new Page(offset, limit)));
     }
 
     @GetMapping
-    public ResponseEntity getArticles(@RequestParam(value = "offset", defaultValue = "0") int offset,
+    public ResponseEntity<ArticleDataList> getArticles(@RequestParam(value = "offset", defaultValue = "0") int offset,
                                       @RequestParam(value = "limit", defaultValue = "20") int limit,
                                       @RequestParam(value = "tag", required = false) String tag,
                                       @RequestParam(value = "favorited", required = false) String favoritedBy,

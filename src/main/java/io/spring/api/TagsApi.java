@@ -21,8 +21,8 @@ public class TagsApi {
     }
 
     @GetMapping
-    public ResponseEntity getTags() {
-        Map<String,Object> mapTags = new HashMap<String,Object>();
+    public ResponseEntity<Map<String,Object>> getTags() {
+        Map<String,Object> mapTags = new HashMap<>();
         mapTags.put("tags", tagsQueryService.allTags());
         return ResponseEntity.ok(mapTags);
     }

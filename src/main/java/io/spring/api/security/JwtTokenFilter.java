@@ -30,21 +30,19 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        getTokenString(request.getHeader(header)).ifPresent(token -> {
-            jwtService.getSubFromToken(token).ifPresent(id -> {
-                if (SecurityContextHolder.getContext().getAuthentication() == null) {
-                    userRepository.findById(id).ifPresent(user -> {
-                        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                            user,
-                            null,
-                            Collections.emptyList()
-                        );
-                        authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-                    });
-                }
-            });
-        });
+        getTokenString(request.getHeader(header)).ifPresent(token -> jwtService.getSubFromToken(token).ifPresent(id -> {
+            if (SecurityContextHolder.getContext().getAuthentication() == null) {
+                userRepository.findById(id).ifPresent(user -> {
+                    UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                        user,
+                        null,
+                        Collections.emptyList()
+                    );
+                    authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                });
+            }
+        }));
 
         filterChain.doFilter(request, response);
     }

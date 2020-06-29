@@ -14,15 +14,14 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+
 
 @RestController
 @RequestMapping(path = "articles/{slug}/favorite")
 public class ArticleFavoriteApi {
-    private ArticleFavoriteRepository articleFavoriteRepository;
-    private ArticleRepository articleRepository;
-    private ArticleQueryService articleQueryService;
+    private final ArticleFavoriteRepository articleFavoriteRepository;
+    private final ArticleRepository articleRepository;
+    private final ArticleQueryService articleQueryService;
 
     @Autowired
     public ArticleFavoriteApi(ArticleFavoriteRepository articleFavoriteRepository,
@@ -34,8 +33,8 @@ public class ArticleFavoriteApi {
     }
 
     @PostMapping
-    public ResponseEntity favoriteArticle(@PathVariable("slug") String slug,
-                                          @AuthenticationPrincipal User user) {
+    public ResponseEntity<HashMap<String, Object>> favoriteArticle(@PathVariable("slug") String slug,
+                                                                   @AuthenticationPrincipal User user) {
         Article article = getArticle(slug);
         ArticleFavorite articleFavorite = new ArticleFavorite(article.getId(), user.getId());
         articleFavoriteRepository.save(articleFavorite);
@@ -44,18 +43,19 @@ public class ArticleFavoriteApi {
     }
 
     @DeleteMapping
-    public ResponseEntity unfavoriteArticle(@PathVariable("slug") String slug,
-                                            @AuthenticationPrincipal User user) {
+    public ResponseEntity<HashMap<String, Object>> unfavoriteArticle(@PathVariable("slug") String slug,
+                                                                     @AuthenticationPrincipal User user) {
         Article article = getArticle(slug);
-        articleFavoriteRepository.find(article.getId(), user.getId()).ifPresent(favorite -> {
-            articleFavoriteRepository.remove(favorite);
-        });
+        ArticleFavorite a = articleFavoriteRepository.find(article.getId(), user.getId()).orElse(null);
+        if (a != null) {
+            articleFavoriteRepository.remove(a);
+        }
         ArticleData articleData = articleQueryService.findBySlug(slug, user).orElse(null);
         return responseArticleData(articleData);
     }
 
     private ResponseEntity<HashMap<String, Object>> responseArticleData(final ArticleData articleData) {
-        HashMap<String, Object> mapArticleData = new HashMap<String, Object>();
+        HashMap<String, Object> mapArticleData = new HashMap<>();
         mapArticleData.put("article", articleData);
         return ResponseEntity.ok(mapArticleData);
     }

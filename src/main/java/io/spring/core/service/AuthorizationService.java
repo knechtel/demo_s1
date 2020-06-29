@@ -5,6 +5,8 @@ import io.spring.core.comment.Comment;
 import io.spring.core.user.User;
 
 public class AuthorizationService {
+
+    private AuthorizationService(){}
     public static boolean canWriteArticle(User user, Article article) {
         return user.getId().equals(article.getUserId());
     }

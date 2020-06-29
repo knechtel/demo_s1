@@ -56,7 +56,7 @@ public class ArticleQueryService {
     public ArticleDataList findRecentArticles(String tag, String author, String favoritedBy, Page page, User currentUser) {
         List<String> articleIds = articleReadService.queryArticles(tag, author, favoritedBy, page);
         int articleCount = articleReadService.countArticle(tag, author, favoritedBy);
-        if (articleIds.size() == 0) {
+        if (articleIds.isEmpty()) {
             return new ArticleDataList(new ArrayList<>(), articleCount);
         } else {
             List<ArticleData> articles = articleReadService.findArticles(articleIds);
@@ -87,14 +87,16 @@ public class ArticleQueryService {
     private void setFavoriteCount(List<ArticleData> articles) {
         List<ArticleFavoriteCount> favoritesCounts = articleFavoritesReadService.articlesFavoriteCount(articles.stream().map(ArticleData::getId).collect(toList()));
         Map<String, Integer> countMap = new HashMap<>();
-        favoritesCounts.forEach(item -> {
-            countMap.put(item.getId(), item.getCount());
-        });
+        favoritesCounts.forEach(item ->
+            countMap.put(item.getId(), item.getCount())
+        );
         articles.forEach(articleData -> articleData.setFavoritesCount(countMap.get(articleData.getId())));
     }
 
     private void setIsFavorite(List<ArticleData> articles, User currentUser) {
-        Set<String> favoritedArticles = articleFavoritesReadService.userFavorites(articles.stream().map(articleData -> articleData.getId()).collect(toList()), currentUser);
+
+        Set<String> favoritedArticles = articleFavoritesReadService.userFavorites(articles.stream().
+                map(ArticleData::getId).collect(toList()), currentUser);
 
         articles.forEach(articleData -> {
             if (favoritedArticles.contains(articleData.getId())) {
@@ -114,7 +116,7 @@ public class ArticleQueryService {
 
     public ArticleDataList findUserFeed(User user, Page page) {
         List<String> followdUsers = userRelationshipQueryService.followedUsers(user.getId());
-        if (followdUsers.size() == 0) {
+        if (followdUsers.isEmpty()) {
             return new ArticleDataList(new ArrayList<>(), 0);
         } else {
             List<ArticleData> articles = articleReadService.findArticlesOfAuthors(followdUsers, page);

@@ -32,7 +32,7 @@ public class ArticleApi {
     }
 
     @GetMapping
-    public ResponseEntity<?> article(@PathVariable("slug") String slug,
+    public ResponseEntity<Map<String, Object>> article(@PathVariable("slug") String slug,
                                      @AuthenticationPrincipal User user) {
         return articleQueryService.findBySlug(slug, user)
                 .map(articleData -> ResponseEntity.ok(articleResponse(articleData)))
@@ -40,7 +40,7 @@ public class ArticleApi {
     }
 
     @PutMapping
-    public ResponseEntity<?> updateArticle(@PathVariable("slug") String slug,
+    public ResponseEntity<Map<String, Object>> updateArticle(@PathVariable("slug") String slug,
                                            @AuthenticationPrincipal User user,
                                            @Valid @RequestBody UpdateArticleParam updateArticleParam) {
         return articleRepository.findBySlug(slug).map(article -> {
@@ -57,7 +57,7 @@ public class ArticleApi {
     }
 
     @DeleteMapping
-    public ResponseEntity deleteArticle(@PathVariable("slug") String slug,
+    public ResponseEntity<Object> deleteArticle(@PathVariable("slug") String slug,
                                         @AuthenticationPrincipal User user) {
         return articleRepository.findBySlug(slug).map(article -> {
             if (!AuthorizationService.canWriteArticle(user, article)) {
@@ -69,7 +69,7 @@ public class ArticleApi {
     }
 
     private Map<String, Object> articleResponse(ArticleData articleData) {
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
         map.put("article", articleData);
         return map;
     }

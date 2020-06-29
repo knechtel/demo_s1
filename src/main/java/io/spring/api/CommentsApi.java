@@ -25,7 +25,7 @@ import javax.validation.constraints.NotBlank;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+
 
 @RestController
 @RequestMapping(path = "/articles/{slug}/comments")
@@ -44,7 +44,7 @@ public class CommentsApi {
     }
 
     @PostMapping
-    public ResponseEntity<?> createComment(@PathVariable("slug") String slug,
+    public ResponseEntity< Map<String, Object> > createComment(@PathVariable("slug") String slug,
                                                      @AuthenticationPrincipal User user,
                                                      @Valid @RequestBody NewCommentParam newCommentParam,
                                                      BindingResult bindingResult) {
@@ -59,17 +59,17 @@ public class CommentsApi {
     }
 
     @GetMapping
-    public ResponseEntity getComments(@PathVariable("slug") String slug,
+    public ResponseEntity<Map<String,Object> > getComments(@PathVariable("slug") String slug,
                                       @AuthenticationPrincipal User user) {
         Article article = findArticle(slug);
         List<CommentData> comments = commentQueryService.findByArticleId(article.getId(), user);
-        Map<String,Object> mapComments = new HashMap<String, Object>();
+        Map<String,Object> mapComments = new HashMap<>();
         mapComments.put("comments", comments);
         return ResponseEntity.ok(mapComments);
     }
 
-    @RequestMapping(path = "{id}", method = RequestMethod.DELETE)
-    public ResponseEntity deleteComment(@PathVariable("slug") String slug,
+    @DeleteMapping(path = "{id}")
+    public ResponseEntity<Object> deleteComment(@PathVariable("slug") String slug,
                                         @PathVariable("id") String commentId,
                                         @AuthenticationPrincipal User user) {
         Article article = findArticle(slug);
@@ -87,7 +87,7 @@ public class CommentsApi {
     }
 
     private Map<String, Object> commentResponse(CommentData commentData) {
-        Map<String,Object> mapComment = new HashMap<String, Object>();
+        Map<String,Object> mapComment = new HashMap<>();
         mapComment.put("comment", commentData);
         return  mapComment;
     }
